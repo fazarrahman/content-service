@@ -30,7 +30,7 @@ func (r *Rest) UploadImage(c echo.Context) error {
 	claims := jwtlib.GetClaims(c)
 	err := r.service.UploadImage(c, &image, claims.UserId)
 	if err != nil {
-		return c.JSON(err.Code, echo.Map{"Error": err.Message})
+		return c.JSON(err.Code, echo.Map{"message": err.Message})
 	}
-	return c.JSON(http.StatusOK, echo.Map{"Message": "Success"})
+	return c.JSON(http.StatusOK, echo.Map{"message": "Success"})
 }

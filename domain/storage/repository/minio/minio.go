@@ -48,7 +48,7 @@ func (s *MinioStorage) UploadImage(ctx echo.Context, imageBase64Str, groupName s
 	b64data := imageBase64Str[strings.IndexByte(imageBase64Str, ',')+1:]
 	decodedImage, err := base64.StdEncoding.DecodeString(b64data)
 	if err != nil {
-		return "", echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("failed to decode image: %w", err))
+		return "", echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("failed to decode image: %s", err.Error()))
 	}
 
 	fileType := http.DetectContentType(decodedImage)
@@ -63,11 +63,11 @@ func (s *MinioStorage) UploadImage(ctx echo.Context, imageBase64Str, groupName s
 	}
 
 	if fileExtension == "" {
-		return "", echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("file extension must be : %v", validFileExtensions))
+		return "", echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("file extension must be : %v", validFileExtensions))
 	}
 
 	if len(decodedImage) > 2*1024*1024 {
-		return "", echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("image is too large (2MB max)"))
+		return "", echo.NewHTTPError(http.StatusBadRequest, "image is too large (2MB max)")
 	}
 
 	filename := uuid.New().String() + fileExtension
@@ -75,7 +75,7 @@ func (s *MinioStorage) UploadImage(ctx echo.Context, imageBase64Str, groupName s
 
 	info, err := s.client.PutObject(context.Background(), s.bucket, objectName, bytes.NewReader(decodedImage), int64(len(decodedImage)), minio.PutObjectOptions{})
 	if err != nil {
-		return "", echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("failed to upload image: %w", err))
+		return "", echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("failed to upload image: %s", err.Error()))
 	}
 
 	return fmt.Sprintf("%s/%s/%s", os.Getenv("STORAGE_PUBLIC_URL"), info.Bucket, info.Key), nil
