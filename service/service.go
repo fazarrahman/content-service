@@ -19,4 +19,5 @@ func New(imageRepository imageRepository.Repository, storageRepository storageRe
 
 type Repository interface {
 	UploadImage(ctx echo.Context, image *entity.Image, userID uuid.UUID) error
+	GetList(ctx echo.Context) ([]*entity.Image, *echo.HTTPError)
 }

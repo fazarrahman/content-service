@@ -25,3 +25,7 @@ func (s *Service) UploadImage(ctx echo.Context, image *entity.Image, userID uuid
 	image.Path = path
 	return s.imageRepository.Save(ctx, image)
 }
+
+func (s *Service) GetList(ctx echo.Context) ([]*entity.Image, *echo.HTTPError) {
+	return s.imageRepository.GetList(ctx)
+}

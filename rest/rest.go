@@ -18,8 +18,9 @@ func New(service *service.Service) *Rest {
 }
 
 func (r *Rest) Register(e *echo.Echo) {
-	content := e.Group("/api/v1/content", jwtlib.Required())
-	content.POST("/image", r.UploadImage)
+	content := e.Group("/api/v1/content")
+	content.POST("/image", r.UploadImage, jwtlib.Required())
+	content.GET("/image", r.GetList)
 }
 
 func (r *Rest) UploadImage(c echo.Context) error {
@@ -33,4 +34,12 @@ func (r *Rest) UploadImage(c echo.Context) error {
 		return c.JSON(err.Code, echo.Map{"message": err.Message})
 	}
 	return c.JSON(http.StatusOK, echo.Map{"message": "Success"})
+}
+
+func (r *Rest) GetList(c echo.Context) error {
+	images, err := r.service.GetList(c)
+	if err != nil {
+		return c.JSON(err.Code, echo.Map{"message": err.Message})
+	}
+	return c.JSON(http.StatusOK, echo.Map{"data": images})
 }

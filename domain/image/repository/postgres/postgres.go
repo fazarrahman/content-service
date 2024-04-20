@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/fazarrahman/content-service/domain/image/entity"
@@ -21,4 +22,16 @@ func (p *Postgres) Save(ctx echo.Context, image *entity.Image) *echo.HTTPError {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Error when saving image : ", err)
 	}
 	return nil
+}
+
+func (p *Postgres) GetList(ctx echo.Context) ([]*entity.Image, *echo.HTTPError) {
+	images := []*entity.Image{}
+	tx := p.db.WithContext(ctx.Request().Context()).Find(&images)
+	if tx.Error != nil {
+		if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, echo.NewHTTPError(http.StatusInternalServerError, "Error when getting image list : ", tx.Error)
+	}
+	return images, nil
 }
