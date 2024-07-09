@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    ports:
+      - "4100:4100"
+    environment:
+      - APP_PORT=4100
+      - DB_HOST=postgres
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - JWT_SECRET=secret
+    networks:
+      - hidaya
+
+networks:
+  hidaya:
+    name: hidaya
+    external: true
