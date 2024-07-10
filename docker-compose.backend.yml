@@ -13,6 +13,13 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - JWT_SECRET=secret
+      - STORAGE_ENDPOINT=minio:9000
+      - STORAGE_PUBLIC_URL=http://localhost:9000
+      - STORAGE_ACCESS_KEY=iL6P5GSsdYofSMyt2Zd7
+      - STORAGE_SECRET_KEY=GGcQA2Ndyu3FmPHiepPK4l2VQeG41QsWGE0vlRX0
+      - STORAGE_BUCKET_NAME=hidaya
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=minio123
     networks:
       - hidaya
 

@@ -6,5 +6,5 @@ import (
 )
 
 type Repository interface {
-	UploadImage(ctx echo.Context, imageBase64Str, groupName string, userID uuid.UUID) (string, *echo.HTTPError)
+	UploadImage(ctx echo.Context, File, groupName string, userID uuid.UUID) (string, *echo.HTTPError)
 }

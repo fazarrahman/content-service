@@ -34,7 +34,7 @@ func New() *MinioStorage {
 		Secure: false,
 	})
 	if err != nil {
-		logrus.Errorln("Failed to connect to MinIO:", err)
+		logrus.Panicln("Failed to connect to MinIO:", err)
 	}
 
 	return &MinioStorage{
@@ -44,8 +44,8 @@ func New() *MinioStorage {
 	}
 }
 
-func (s *MinioStorage) UploadImage(ctx echo.Context, imageBase64Str, groupName string, userID uuid.UUID) (string, *echo.HTTPError) {
-	b64data := imageBase64Str[strings.IndexByte(imageBase64Str, ',')+1:]
+func (s *MinioStorage) UploadImage(ctx echo.Context, file, groupName string, userID uuid.UUID) (string, *echo.HTTPError) {
+	b64data := file[strings.IndexByte(file, ',')+1:]
 	decodedImage, err := base64.StdEncoding.DecodeString(b64data)
 	if err != nil {
 		return "", echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("failed to decode image: %s", err.Error()))

@@ -9,7 +9,7 @@ import (
 )
 
 func (s *Service) UploadImage(ctx echo.Context, image *entity.Image, userID uuid.UUID) *echo.HTTPError {
-	if image == nil || image.ImageBase64Str == "" {
+	if image == nil || image.File == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "Image is required")
 	}
 
@@ -17,7 +17,7 @@ func (s *Service) UploadImage(ctx echo.Context, image *entity.Image, userID uuid
 		return echo.NewHTTPError(http.StatusBadRequest, "Group is required")
 	}
 
-	path, err := s.storageRepository.UploadImage(ctx, image.ImageBase64Str, image.Group, userID)
+	path, err := s.storageRepository.UploadImage(ctx, image.File, image.Group, userID)
 	if err != nil {
 		return err
 	}
