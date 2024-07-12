@@ -35,6 +35,7 @@ func Connection() *gorm.DB {
 
 	err = db.AutoMigrate(
 		&entity.Image{},
+		&entity.Tag{},
 	)
 	if err != nil {
 		logrus.Fatalf("Failed to migrate table: %v", err)

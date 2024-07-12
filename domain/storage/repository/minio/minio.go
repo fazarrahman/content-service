@@ -10,6 +10,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/fazarrahman/content-service/domain/image/entity"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/minio/minio-go/v7"
@@ -44,8 +45,8 @@ func New() *MinioStorage {
 	}
 }
 
-func (s *MinioStorage) UploadImage(ctx echo.Context, file, groupName string, userID uuid.UUID) (string, *echo.HTTPError) {
-	b64data := file[strings.IndexByte(file, ',')+1:]
+func (s *MinioStorage) UploadImage(ctx echo.Context, image *entity.Image, userID uuid.UUID) (string, *echo.HTTPError) {
+	b64data := image.File[strings.IndexByte(image.File, ',')+1:]
 	decodedImage, err := base64.StdEncoding.DecodeString(b64data)
 	if err != nil {
 		return "", echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("failed to decode image: %s", err.Error()))
@@ -70,13 +71,13 @@ func (s *MinioStorage) UploadImage(ctx echo.Context, file, groupName string, use
 		return "", echo.NewHTTPError(http.StatusBadRequest, "image is too large (2MB max)")
 	}
 
-	filename := uuid.New().String() + fileExtension
-	objectName := fmt.Sprintf("%s/%s/%s", userID.String(), groupName, filename)
+	image.FileName = uuid.New().String() + fileExtension
+	objectName := fmt.Sprintf("%s/%s/%s", userID.String(), image.Group, image.FileName)
 
 	info, err := s.client.PutObject(context.Background(), s.bucket, objectName, bytes.NewReader(decodedImage), int64(len(decodedImage)), minio.PutObjectOptions{})
 	if err != nil {
 		return "", echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("failed to upload image: %s", err.Error()))
 	}
 
-	return fmt.Sprintf("%s/%s/%s", os.Getenv("STORAGE_PUBLIC_URL"), info.Bucket, info.Key), nil
+	return fmt.Sprintf("%s/%s", info.Bucket, info.Key), nil
 }
