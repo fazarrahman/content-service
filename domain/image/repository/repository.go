@@ -7,5 +7,5 @@ import (
 
 type Repository interface {
 	Save(ctx echo.Context, image *entity.Image) *echo.HTTPError
-	GetList(ctx echo.Context) ([]*entity.Image, *echo.HTTPError)
+	GetList(ctx echo.Context, page, size int) ([]*entity.Image, *echo.HTTPError)
 }

@@ -34,6 +34,6 @@ func (s *Service) UploadImage(ctx echo.Context, image *entity.Image, userID uuid
 	return s.imageRepository.Save(ctx, image)
 }
 
-func (s *Service) GetList(ctx echo.Context) ([]*entity.Image, *echo.HTTPError) {
-	return s.imageRepository.GetList(ctx)
+func (s *Service) GetList(ctx echo.Context, page, size int) ([]*entity.Image, *echo.HTTPError) {
+	return s.imageRepository.GetList(ctx, page, size)
 }

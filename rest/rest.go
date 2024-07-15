@@ -2,6 +2,7 @@ package rest
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/fazarrahman/content-service/domain/image/entity"
 	jwtlib "github.com/fazarrahman/content-service/lib/jwtLib"
@@ -37,7 +38,17 @@ func (r *Rest) UploadImage(c echo.Context) error {
 }
 
 func (r *Rest) GetList(c echo.Context) error {
-	images, err := r.service.GetList(c)
+	pageStr := c.QueryParam("page")
+	page, errl := strconv.Atoi(pageStr)
+	if errl != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "Page is required"})
+	}
+	sizeStr := c.QueryParam("size")
+	size, errl := strconv.Atoi(sizeStr)
+	if errl != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "Size is required"})
+	}
+	images, err := r.service.GetList(c, page, size)
 	if err != nil {
 		return c.JSON(err.Code, echo.Map{"message": err.Message})
 	}

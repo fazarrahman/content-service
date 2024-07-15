@@ -56,9 +56,12 @@ func (p *Postgres) Save(ctx echo.Context, image *entity.Image) *echo.HTTPError {
 	return nil
 }
 
-func (p *Postgres) GetList(ctx echo.Context) ([]*entity.Image, *echo.HTTPError) {
+func (p *Postgres) GetList(ctx echo.Context, page, size int) ([]*entity.Image, *echo.HTTPError) {
 	images := []*entity.Image{}
-	tx := p.db.WithContext(ctx.Request().Context()).Find(&images)
+	offset := (page - 1) * size
+	tx := p.db.WithContext(ctx.Request().Context()).
+		Limit(size).Offset(offset).
+		Find(&images)
 	if tx.Error != nil {
 		if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
 			return nil, nil
