@@ -7,6 +7,7 @@ import (
 	"github.com/fazarrahman/content-service/domain/image/entity"
 	jwtlib "github.com/fazarrahman/content-service/lib/jwtLib"
 	"github.com/fazarrahman/content-service/service"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -22,6 +23,21 @@ func (r *Rest) Register(e *echo.Echo) {
 	content := e.Group("/api/v1/content")
 	content.POST("/image", r.UploadImage, jwtlib.Required())
 	content.GET("/image", r.GetList)
+	content.GET("/image/:id", r.GetById)
+}
+
+func (r *Rest) GetById(c echo.Context) error {
+	idStr := c.Param("id")
+	id, errl := uuid.Parse(idStr)
+	if errl != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"message": "invalid id format"})
+	}
+	image, err := r.service.GetById(c, id)
+	if err != nil {
+		return c.JSON(err.Code, echo.Map{"message": err.Message})
+	}
+
+	return c.JSON(http.StatusOK, image)
 }
 
 func (r *Rest) UploadImage(c echo.Context) error {

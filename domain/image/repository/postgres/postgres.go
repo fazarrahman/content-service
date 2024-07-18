@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/fazarrahman/content-service/domain/image/entity"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -69,4 +70,16 @@ func (p *Postgres) GetList(ctx echo.Context, page, size int) ([]*entity.Image, *
 		return nil, echo.NewHTTPError(http.StatusInternalServerError, "Error when getting image list : ", tx.Error)
 	}
 	return images, nil
+}
+
+func (p *Postgres) GetById(ctx echo.Context, id uuid.UUID) (*entity.Image, *echo.HTTPError) {
+	image := entity.Image{}
+	tx := p.db.Where("id = ?", id).Find(&image)
+	if tx.Error != nil {
+		if tx.Error == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("Error when getting image data by id : %s", tx.Error))
+	}
+	return &image, nil
 }

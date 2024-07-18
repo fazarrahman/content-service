@@ -37,3 +37,13 @@ func (s *Service) UploadImage(ctx echo.Context, image *entity.Image, userID uuid
 func (s *Service) GetList(ctx echo.Context, page, size int) ([]*entity.Image, *echo.HTTPError) {
 	return s.imageRepository.GetList(ctx, page, size)
 }
+
+func (s *Service) GetById(ctx echo.Context, id uuid.UUID) (*entity.Image, *echo.HTTPError) {
+	image, err := s.imageRepository.GetById(ctx, id)
+	if err != nil && image != nil {
+		return nil, echo.NewHTTPError(http.StatusBadRequest, "Image data not found")
+	} else if err != nil {
+		return nil, err
+	}
+	return image, nil
+}
