@@ -23,7 +23,8 @@ func Connection() *gorm.DB {
 	if strings.Trim(port, " ") != "" {
 		portStr = fmt.Sprintf("port=%s ", port)
 	}
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s %ssslmode=%s TimeZone=Asia/Jakarta", host, username, sslMode, password, dbName, portStr)
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s %ssslmode=%s TimeZone=Asia/Jakarta", host, username, password, dbName, portStr, sslMode)
+	fmt.Println(dsn)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		TranslateError:         false,
 		SkipDefaultTransaction: true,
