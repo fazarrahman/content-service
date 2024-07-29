@@ -16,7 +16,7 @@ func Connection() *gorm.DB {
 	username := os.Getenv("DB_USERNAME")
 	password := os.Getenv("DB_PASSWORD")
 	host := os.Getenv("DB_HOST")
-	dbName := os.Getenv("DB_NAME")
+	dbName := os.Getenv("CONTENT_DB_NAME")
 	port := os.Getenv("DB_PORT")
 	portStr := ""
 	if strings.Trim(port, " ") != "" {

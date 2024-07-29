@@ -6,12 +6,12 @@ services:
     ports:
       - "4100:4100"
     environment:
-      - APP_PORT=4100
+      - CONTENT_APP_PORT=4100
       - DB_HOST=postgres
       - DB_PORT=${DB_PORT}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
+      - CONTENT_DB_NAME=${CONTENT_DB_NAME}
       - JWT_SECRET=secret
       - STORAGE_ENDPOINT=minio:9000
       - STORAGE_ACCESS_KEY=iL6P5GSsdYofSMyt2Zd7

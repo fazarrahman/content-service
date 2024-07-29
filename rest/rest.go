@@ -37,7 +37,7 @@ func (r *Rest) GetById(c echo.Context) error {
 		return c.JSON(err.Code, echo.Map{"message": err.Message})
 	}
 
-	return c.JSON(http.StatusOK, image)
+	return c.JSON(http.StatusOK, echo.Map{"data": image})
 }
 
 func (r *Rest) UploadImage(c echo.Context) error {

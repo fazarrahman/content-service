@@ -6,7 +6,7 @@ import (
 
 	"github.com/fazarrahman/content-service/config/postgres"
 	imagePostgreRepo "github.com/fazarrahman/content-service/domain/image/repository/postgres"
-	minioStorage "github.com/fazarrahman/content-service/domain/storage/repository/minio"
+	"github.com/fazarrahman/content-service/domain/storage/repository/spacebucket"
 	"github.com/fazarrahman/content-service/lib/envLib"
 	"github.com/fazarrahman/content-service/rest"
 	"github.com/fazarrahman/content-service/service"
@@ -27,9 +27,9 @@ func main() {
 	}))
 	db := postgres.Connection()
 	imagePostgre := imagePostgreRepo.NewPostgres(db)
-	minioStg := minioStorage.New()
-	svc := service.New(imagePostgre, minioStg)
+	spaceBucket := spacebucket.New()
+	svc := service.New(imagePostgre, spaceBucket)
 	rest.New(svc).Register(e)
-	fmt.Println("App run at port " + envLib.GetEnv("APP_PORT"))
-	e.Logger.Fatal(e.Start(":" + envLib.GetEnv("APP_PORT")))
+	fmt.Println("App run at port " + envLib.GetEnv("CONTENT_APP_PORT"))
+	e.Logger.Fatal(e.Start(":" + envLib.GetEnv("CONTENT_APP_PORT")))
 }
