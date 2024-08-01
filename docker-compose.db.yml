@@ -45,6 +45,7 @@ networks:
   hidaya:
     name: hidaya
     external: true
+    driver: bridge
 
 volumes:
   postgres_data:

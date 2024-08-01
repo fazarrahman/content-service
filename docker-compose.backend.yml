@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  backend:
+  content-service:
     build: .
     ports:
       - "4100:4100"
@@ -29,3 +29,4 @@ networks:
   hidaya:
     name: hidaya
     external: true
+    driver: bridge
